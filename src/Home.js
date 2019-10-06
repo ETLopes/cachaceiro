@@ -1,25 +1,25 @@
-/**
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Picker, ScrollView} from 'react-native';
-import {TextInput, Divider, Appbar} from 'react-native-paper';
+import {StyleSheet, View, ScrollView, Text, Picker} from 'react-native';
+import {TextInput, Divider} from 'react-native-paper';
 import {TextInputMask} from 'react-native-masked-text';
 
-class App extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '',
-      size: 1000,
+      value: 0,
+      size: 0,
     };
   }
+
   calculation(value, size, quantity) {
+    if (size === 0) {
+      return 0;
+    }
     const convertedValue = parseFloat(value.replace(/[^0-9.-]+/g, ''));
     return (((convertedValue / size) * quantity) / 100).toFixed(2);
   }
+
   render() {
     const volumes = [
       {recipient: 'Litrao 1000ml', quantity: 1000},
@@ -37,11 +37,8 @@ class App extends Component {
 
     return (
       <View style={styles.page}>
-        <Appbar.Header style={styles.header}>
-          <Appbar.Content title="Conversor de Cervejas" />
-        </Appbar.Header>
         <View style={styles.body}>
-          <Text>Digite o preço da cerveja:</Text>
+          <Text>Digite o preço do papel higiênico:</Text>
           <TextInputMask
             label={'preço'}
             type={'money'}
@@ -54,13 +51,15 @@ class App extends Component {
             ref={ref => (this.moneyField = ref)}
             style={styles.valueInput}
           />
-          <Text>Escolha o tamanho do vasilhame:</Text>
+          <Text>Escolha o tamanho do pacote:</Text>
           <Picker
             selectedValue={this.state.size}
             onValueChange={(itemValue, itemIndex) =>
               this.setState({size: itemValue})
             }
             style={styles.pickerStyle}>
+            <Picker.Item label="Escolha um tamanho" value={0} />
+
             {volumes.map((volume, index) => (
               <Picker.Item
                 key={index}
@@ -72,21 +71,17 @@ class App extends Component {
           <Divider />
           <View style={styles.valuesArea}>
             {volumes.map((volume, index) => (
-              <View style={styles.valueDisplayBox} k
-              ey={index}>
+              <View style={styles.valueDisplayBox} key={index}>
                 <TextInput
                   key={index}
                   style={styles.valueDisplay}
                   mode="outlined"
                   label={volume.recipient}
-                  value={
-                    'R$' +
-                    this.calculation(
-                      this.state.value,
-                      this.state.size,
-                      volume.quantity,
-                    )
-                  }
+                  value={this.calculation(
+                    this.state.value,
+                    this.state.size,
+                    volume.quantity,
+                  )}
                   disabled
                 />
               </View>
@@ -101,9 +96,7 @@ class App extends Component {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-  },
-  header: {
-    elevation: 4,
+    marginTop: 5,
   },
   body: {
     flex: 10,
@@ -132,8 +125,19 @@ const styles = StyleSheet.create({
   },
   valueDisplay: {
     marginTop: 15,
-    color: 'black'
+    color: 'black',
   },
 });
 
-export default App;
+Home.navigationOptions = {
+  title: 'Conversor de Cerveja',
+  headerStyle: {
+    backgroundColor: '#f4511e',
+  },
+  headerTintColor: '#fff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+  },
+};
+
+export default Home;
