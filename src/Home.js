@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, ScrollView, Text, Picker} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Text,
+  Picker,
+  KeyboardAvoidingView,
+} from 'react-native';
 import {TextInput, Divider} from 'react-native-paper';
 import {TextInputMask} from 'react-native-masked-text';
 
@@ -12,8 +19,8 @@ class Home extends Component {
     };
   }
 
-  calculation(value, size, quantity) {
-    if (size === 0) {
+  calculatePrice(value, size, quantity) {
+    if (size === 0 || value === 0) {
       return 0;
     }
     const convertedValue = parseFloat(value.replace(/[^0-9.-]+/g, ''));
@@ -36,13 +43,14 @@ class Home extends Component {
     ];
 
     return (
-      <View style={styles.page}>
-        <View style={styles.body}>
-          <Text>Digite o preço do papel higiênico:</Text>
+      <KeyboardAvoidingView style={styles.page}>
+        <View style={styles.header}>
+          <Text>Digite o preço da cerveja:</Text>
           <TextInputMask
             label={'preço'}
             type={'money'}
             value={this.state.value}
+            keyboardType={'phone-pad'}
             onChangeText={value => {
               this.setState({
                 value,
@@ -51,7 +59,7 @@ class Home extends Component {
             ref={ref => (this.moneyField = ref)}
             style={styles.valueInput}
           />
-          <Text>Escolha o tamanho do pacote:</Text>
+          <Text>Escolha o tamanho do vasilhame:</Text>
           <Picker
             selectedValue={this.state.size}
             onValueChange={(itemValue, itemIndex) =>
@@ -59,7 +67,6 @@ class Home extends Component {
             }
             style={styles.pickerStyle}>
             <Picker.Item label="Escolha um tamanho" value={0} />
-
             {volumes.map((volume, index) => (
               <Picker.Item
                 key={index}
@@ -68,16 +75,17 @@ class Home extends Component {
               />
             ))}
           </Picker>
-          <Divider />
-          <View style={styles.valuesArea}>
+        </View>
+        <Divider />
+        <View style={styles.body}>
+          <ScrollView contentContainerStyle={styles.scrollView}>
             {volumes.map((volume, index) => (
-              <View style={styles.valueDisplayBox} key={index}>
+              <View key={index} style={styles.valueDisplay}>
                 <TextInput
                   key={index}
-                  style={styles.valueDisplay}
                   mode="outlined"
                   label={volume.recipient}
-                  value={this.calculation(
+                  value={this.calculatePrice(
                     this.state.value,
                     this.state.size,
                     volume.quantity,
@@ -86,9 +94,9 @@ class Home extends Component {
                 />
               </View>
             ))}
-          </View>
+          </ScrollView>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -97,35 +105,40 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     marginTop: 5,
+    marginLeft: 1,
+    marginRight: 1,
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  header: {
+    flex: 2.3,
+    borderWidth: 1,
+    paddingLeft: 5,
+    paddingRight: 5,
+    borderRadius: 5,
   },
   body: {
-    flex: 10,
-    marginLeft: 10,
-    marginRight: 10,
+    flex: 8,
+    marginTop: 10,
   },
   valueInput: {
     borderRadius: 5,
-    borderWidth: 1,
     paddingLeft: 10,
+    borderWidth: 1,
   },
   pickerStyle: {
     borderRadius: 5,
-    borderWidth: 1,
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#EEE',
   },
-  valuesArea: {
-    flex: 1,
-    flexDirection: 'row',
+  scrollView: {
     flexWrap: 'wrap',
+    flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  valueDisplayBox: {
-    width: '48%',
-    marginLeft: 5,
-  },
   valueDisplay: {
-    marginTop: 15,
+    marginTop: 5,
     color: 'black',
+    width: '48%',
   },
 });
 
