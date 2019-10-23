@@ -4,30 +4,29 @@ import {StyleSheet, Text, TouchableOpacity, Linking} from 'react-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
-export default class ScanScreen extends Component {
+class ScanScreen extends Component {
   onSuccess = e => {
-    Linking.openURL(e.data).catch(err =>
-      console.error('An error occured', err),
-    );
+    if (e.type === 'QR_CODE') {
+      Linking.openURL(e.data)
+        .catch(err => console.error('An error occured', err))
+        .finally(() => this.scanner.reactivate());
+    } else {
+      console.warn(e);
+      this.scanner.reactivate();
+    }
   };
+
+  componentWillReceiveProps() {
+    this.scanner.reactivate();
+  }
 
   render() {
     return (
       <QRCodeScanner
         onRead={this.onSuccess}
-        flashMode={QRCodeScanner.Constants.FlashMode.torch}
-        topContent={
-          <Text style={styles.centerText}>
-            Go to{' '}
-            <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
-            your computer and scan the QR code.
-          </Text>
-        }
-        bottomContent={
-          <TouchableOpacity style={styles.buttonTouchable}>
-            <Text style={styles.buttonText}>OK. Got it!</Text>
-          </TouchableOpacity>
-        }
+        ref={node => {
+          this.scanner = node;
+        }}
       />
     );
   }
@@ -53,8 +52,8 @@ const styles = StyleSheet.create({
   },
 });
 
-QRCodeScanner.navigationOptions = {
-  title: 'Leitor de QR Code ',
+ScanScreen.navigationOptions = {
+  title: 'Conversor de Cerveja',
   headerStyle: {
     backgroundColor: '#f4511e',
   },
@@ -63,3 +62,5 @@ QRCodeScanner.navigationOptions = {
     fontWeight: 'bold',
   },
 };
+
+export default ScanScreen;

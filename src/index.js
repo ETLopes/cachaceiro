@@ -3,12 +3,12 @@ import {createStackNavigator} from 'react-navigation-stack';
 
 import Home from './Home';
 import About from './About';
-import QRCode from './QRCode';
+import ScanScreen from './QRCode';
 
 const Routes = createAppContainer(
   createStackNavigator({
-    QRCode: QRCode,
     Home: Home,
+    ScanScreen: ScanScreen,
     About: About,
   }),
 );
