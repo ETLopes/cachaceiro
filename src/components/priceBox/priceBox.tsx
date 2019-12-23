@@ -1,32 +1,33 @@
 import React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 
-export interface Props {
+export interface priceBoxProps {
   value: number;
+  label: string;
 }
 
-const Pricebox: React.FC<Props> = props => {
-  const normalizeValue = (value: number) => {
-    if (value > 0) {
-      return value;
-    }
-    return 0;
-  };
-
-  const {box} = styles;
-
+const Pricebox = ({value, label}: priceBoxProps) => {
   return (
-    <View style={box}>
-      <Text>R$ {props.value}</Text>
+    <View style={styles.box}>
+      <Text>{label}</Text>
+      <Text>R$ {value}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   box: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 10,
     borderColor: 'gray',
+    paddingLeft: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+  },
+  label: {
+    marginBottom: 5,
+    fontWeight: '800',
+    fontSize: 14,
   },
 });
 

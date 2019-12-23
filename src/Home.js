@@ -10,6 +10,10 @@ import {
 import {TextInput, Divider} from 'react-native-paper';
 import {TextInputMask} from 'react-native-masked-text';
 
+import calculatePrice from './calculator/calculator';
+import beerList from './variables/beerList';
+import Pricebox from './components/priceBox/priceBox';
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -19,29 +23,7 @@ class Home extends Component {
     };
   }
 
-  calculatePrice(value, size, quantity) {
-    if (size === 0 || value === 0) {
-      return 0;
-    }
-    const convertedValue = parseFloat(value.replace(/[^0-9.-]+/g, ''));
-    return (((convertedValue / size) * quantity) / 100).toFixed(2);
-  }
-
   render() {
-    const volumes = [
-      {recipient: 'Litrao 1000ml', quantity: 1000},
-      {recipient: 'Garrafa 600ml', quantity: 600},
-      {recipient: 'Garrafa Bud 550ml', quantity: 550},
-      {recipient: 'Latão 473ml', quantity: 473},
-      {recipient: 'Latão Colorado 410ml', quantity: 410},
-      {recipient: 'Long Neck 355ml', quantity: 355},
-      {recipient: 'Lata 350ml', quantity: 350},
-      {recipient: 'Lata Stella 310ml', quantity: 310},
-      {recipient: 'Litrinho 300ml', quantity: 300},
-      {recipient: 'Long Neck Stella 275ml', quantity: 275},
-      {recipient: 'Latinha 269ml', quantity: 269},
-    ];
-
     return (
       <KeyboardAvoidingView style={styles.page}>
         <View style={styles.header}>
@@ -67,31 +49,36 @@ class Home extends Component {
             }
             style={styles.pickerStyle}>
             <Picker.Item label="Escolha um tamanho" value={0} />
-            {volumes.map((volume, index) => (
-              <Picker.Item
-                key={index}
-                label={volume.recipient}
-                value={volume.quantity}
-              />
+            {beerList.map((beer, index) => (
+              <Picker.Item key={index} label={beer.label} value={beer.value} />
             ))}
           </Picker>
         </View>
         <Divider />
         <View style={styles.body}>
           <ScrollView contentContainerStyle={styles.scrollView}>
-            {volumes.map((volume, index) => (
+            {beerList.map((beer, index) => (
               <View key={index} style={styles.valueDisplay}>
-                <TextInput
+                <Pricebox
                   key={index}
-                  mode="outlined"
-                  label={volume.recipient}
-                  value={this.calculatePrice(
+                  label={beer.label}
+                  value={calculatePrice(
                     this.state.value,
                     this.state.size,
-                    volume.quantity,
+                    beer.value,
+                  )}
+                />
+                {/* <TextInput
+                  key={index}
+                  mode="outlined"
+                  label={beer.label}
+                  value={calculatePrice(
+                    this.state.value,
+                    this.state.size,
+                    beer.value,
                   )}
                   disabled
-                />
+                /> */}
               </View>
             ))}
           </ScrollView>

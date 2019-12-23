@@ -1,4 +1,4 @@
-const volumes: {}[] = [
+const beerList: {}[] = [
   {label: 'Litrao 1000ml', value: 1000},
   {label: 'Garrafa 600ml', value: 600},
   {label: 'Garrafa Bud 550ml', value: 550},
@@ -12,4 +12,4 @@ const volumes: {}[] = [
   {label: 'Latinha 269ml', value: 269},
 ];
 
-export default volumes;
+export default beerList;
