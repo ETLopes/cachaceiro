@@ -10,7 +10,7 @@
   "dependencies": {
     "react": "16.8.6",
     "react-native": "0.60.5",
-    "react-native-camera": "^3.8.0",
+    "react-native-camera": "^3.44.3",
     "react-native-elements": "^1.2.0",
     "react-native-gesture-handler": "^1.4.1",
     "react-native-masked-text": "^1.13.0",
